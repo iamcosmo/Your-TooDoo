@@ -19,25 +19,15 @@ export const createTodo = async (req, res) => {
 // Get all todos
 export const getTodos = async (req, res) => {
     try {
-        const todos = await Todo.find().populate('user_id'); 
-        res.status(200).json(todos);
+        console.log('users todos requested',req.user);
+        const todos = await Todo.find({ user_id: req.user._id })//.populate('user_id');
+        return res.status(200).json({data:todos,message:'success'});
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 };
 
-// Get a todo by ID
-export const getTodoById = async (req, res) => {
-    try {
-        const todo = await Todo.findById(req.params.id).populate('user_id');
-        if (!todo) {
-            return res.status(404).json({ message: 'Todo not found' });
-        }
-        res.status(200).json(todo);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
+
 
 // Update a todo by ID
 export const updateTodo = async (req, res) => {
@@ -46,14 +36,14 @@ export const updateTodo = async (req, res) => {
             req.params.id,
             req.body,
             { new: true, runValidators: true } 
-        ).populate('user_id');
+        )
         
         if (!updatedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
-        res.status(200).json(updatedTodo);
+        return res.status(200).json(updatedTodo);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 };
 
@@ -64,9 +54,9 @@ export const deleteTodo = async (req, res) => {
         if (!deletedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
-        res.status(204).send(); 
+       return res.status(204).send(); 
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 };
 
