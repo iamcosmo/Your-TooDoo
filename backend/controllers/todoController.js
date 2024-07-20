@@ -21,7 +21,7 @@ export const getTodos = async (req, res) => {
     try {
         console.log('users todos requested',req.user);
         const todos = await Todo.find({ user_id: req.user._id })//.populate('user_id');
-        return res.status(200).json({data:todos,message:'success'});
+        return res.status(200).json({data:todos,message:'A List of Todos'});
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -41,7 +41,7 @@ export const updateTodo = async (req, res) => {
         if (!updatedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
-        return res.status(200).json(updatedTodo);
+        return res.status(200).json({updated:updatedTodo,message:'The todo was updated'});
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
@@ -54,7 +54,7 @@ export const deleteTodo = async (req, res) => {
         if (!deletedTodo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
-       return res.status(204).send(); 
+       return res.status(204).send({message:'Deleted'}); 
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
