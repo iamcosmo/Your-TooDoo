@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import todoRouter from './routes/todoRoutes.js';
 import authRouter from './routes/authRoutes.js';
-
+import swaggerDocs from './swagger.js';
 
 dotenv.config();
 
@@ -18,6 +18,8 @@ connectDB();
 
 app.use('/auth',authRouter)
 app.use('/todos', todoRouter);
+
+swaggerDocs(app); 
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
