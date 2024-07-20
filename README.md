@@ -1,6 +1,5 @@
 # Your-TooDoo
 
-## Overview
 This is a simple ToDo application Node.js-Express Backend with MongoDB, Swagger API Documentation, and Jest Unit Testing
 
 ## Table of Contents
@@ -21,7 +20,7 @@ This is a simple ToDo application Node.js-Express Backend with MongoDB, Swagger 
 
 ## Introduction
 
-This project is a Node.js backend application built using the Express framework, MongoDB for data storage, Swagger for API documentation, and Jest for unit testing. It also uses nodemon for development to automatically restart the server on file changes.
+This project is a simple ToDo application Node.js backend. It is built using the Express framework, MongoDB for data storage, Swagger for API documentation, and Jest for unit testing. It also uses nodemon for development to automatically restart the server on file changes.
 
 ## Features
 
@@ -44,8 +43,8 @@ Make sure you have the following installed on your system:
 1. **Clone the repository:**
 
     ```sh
-    git clone <repository_url>
-    cd <repository_name>
+    git clone https://github.com/iamcosmo/Your-TooDoo.git
+    cd Your-TooDoo
     ```
 
 2. **Install dependencies:**
@@ -64,7 +63,7 @@ Make sure you have the following installed on your system:
     JWT_SECRET=your_secret_key
     ```
 
-2. **Update the `swagger.json` file if necessary, located in the `docs` folder, with your API details.**
+2. **Update the `swagger.js` file if necessary, located in the `root` folder, with your API details.**
 
 ## Running the Application
 
@@ -109,16 +108,17 @@ Make sure you have the following installed on your system:
     │   ├── routes
     │   ├── services
     │   └── app.js
-    ├── test
-    │   └── ...
-    ├── docs
-    │   └── swagger.json
+    ├── tests
+    │   └── todo.test.js
+    ├── .babelrc
     ├── .env
     ├── .gitignore
-    ├── jest.config.js
+    ├── jest.setup.js
+    ├── swagger.js
+    ├── package-lock.json
     ├── package.json
-    ├── README.md
-    └── ...
+    README.md
+    
 
 ## Contributing
 
@@ -144,6 +144,4 @@ Make sure you have the following installed on your system:
 
 5. **Open a pull request.**
 
-## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
