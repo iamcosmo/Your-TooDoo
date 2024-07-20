@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../index.js';
+import {server,app} from '../index.js';
 import mongoose from 'mongoose';
 
 describe('Todo API', function () {
@@ -26,8 +26,9 @@ describe('Todo API', function () {
   });
 
   afterAll(async function () {
-    await mongoose.connection.dropDatabase();
+    //await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
+    server.close();
   });
 
   describe('POST /todos', function () {
