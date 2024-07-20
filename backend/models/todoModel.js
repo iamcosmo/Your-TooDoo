@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import UserDataModel from './userModel';
 
 const todoSchema = new mongoose.Schema({
     
@@ -13,6 +14,13 @@ const todoSchema = new mongoose.Schema({
         type: String,
         default: 'pending',
     },
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserDataModel',
+        required: true, 
+    },
+}, {
+    timestamps: true 
 });
 
 const Todo = mongoose.model('Todo', todoSchema);
