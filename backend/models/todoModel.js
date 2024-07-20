@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import UserDataModel from './userModel';
+import UserDataModel from './userModel.js';
 
 const todoSchema = new mongoose.Schema({
     

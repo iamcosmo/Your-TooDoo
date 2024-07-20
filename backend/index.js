@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import todoRouter from './routes/todoRoutes.js';
 import authRouter from './routes/authRoutes.js';
-import { authMiddleware } from './middlewares/authMiddlewares.js';
 
 
 dotenv.config();
@@ -18,7 +17,7 @@ app.use(bodyParser.json());
 connectDB();
 
 app.use('/auth',authRouter)
-app.use('/todos',authMiddleware, todoRouter);
+app.use('/todos', todoRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
