@@ -1,75 +1,101 @@
 import request from 'supertest';
-import app from '../app.js';
+import app from '../index.js';
 import mongoose from 'mongoose';
-import Todo from '../models/todoModel.js';
 
-beforeAll(async () => {
-    await mongoose.connect(process.env.MONGO_URI, {
+describe('Todo API', function () {
+  let token;
+
+  beforeAll(async function () {
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(process.env.MONGO_URI_TEST, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    });
-});
+      });
+    }
 
-afterAll(async () => {
+    // Sign up and login to get a token
+    const res = await request(app)
+      .post('/auth/signup')
+      .send({ name: 'chandan', username: 'cosmos', password: 'Hellya11#' });
+    
+    const loginRes = await request(app)
+      .post('/auth/login')
+      .send({ username: 'cosmos', password: 'Hellya11#' });
+
+    token = loginRes.body.token;
+  });
+
+  afterAll(async function () {
+    await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
-});
+  });
 
-beforeEach(async () => {
-    await Todo.deleteMany({});
-});
+  describe('POST /todos', function () {
+    it('should create a new todo', async function () {
+      const res = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ title: 'Test Todo', description: 'Test Description', status: 'pending' });
 
-describe('Todo API', () => {
-    it('should create a new todo', async () => {
-        const res = await request(app)
-            .post('/todos')
-            .send({
-                title: 'Test Todo',
-                description: 'Test Description',
-            });
-        expect(res.statusCode).toEqual(201);
-        expect(res.body).toHaveProperty('_id');
+      expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty('data');
+      expect(res.body.message).toBe('created');
+    });
+  });
+
+  describe('GET /todos', function () {
+    it('should get all todos for the user', async function () {
+      const res = await request(app)
+        .get('/todos')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('data');
+      expect(res.body.message).toBe('success');
+    });
+  });
+
+  describe('PATCH /todos/:id', function () {
+    let todoId;
+
+    beforeAll(async function () {
+      const todoRes = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ title: 'Todo to Update', description: 'Update Test', status: 'pending' });
+
+      todoId = todoRes.body.data._id;
     });
 
-    it('should fetch all todos', async () => {
-        const res = await request(app).get('/todos');
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveLength(0);
+    it('should update a todo', async function () {
+      const res = await request(app)
+        .patch(`/todos/${todoId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ title: 'Updated Todo' });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('title', 'Updated Todo');
+    });
+  });
+
+  describe('DELETE /todos/:id', function () {
+    let todoId;
+
+    beforeAll(async function () {
+      const todoRes = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ title: 'Todo to Delete', description: 'Delete Test', status: 'pending' });
+
+      todoId = todoRes.body.data._id;
     });
 
-    it('should fetch a single todo by ID', async () => {
-        const todo = new Todo({
-            title: 'Test Todo',
-            description: 'Test Description',
-        });
-        await todo.save();
+    it('should delete a todo', async function () {
+      const res = await request(app)
+        .delete(`/todos/${todoId}`)
+        .set('Authorization', `Bearer ${token}`);
 
-        const res = await request(app).get(`/todos/${todo._id}`);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty('_id', todo._id.toString());
+      expect(res.status).toBe(204);
     });
-
-    it('should update a todo', async () => {
-        const todo = new Todo({
-            title: 'Test Todo',
-            description: 'Test Description',
-        });
-        await todo.save();
-
-        const res = await request(app)
-            .patch(`/todos/${todo._id}`)
-            .send({ status: 'completed' });
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty('status', 'completed');
-    });
-
-    it('should delete a todo', async () => {
-        const todo = new Todo({
-            title: 'Test Todo',
-            description: 'Test Description',
-        });
-        await todo.save();
-
-        const res = await request(app).delete(`/todos/${todo._id}`);
-        expect(res.statusCode).toEqual(200);
-    });
+  });
 });
