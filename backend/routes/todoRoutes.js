@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 import {
     createTodo,
     getTodos,
@@ -7,12 +7,12 @@ import {
     deleteTodo,
 } from '../controllers/todoController.js';
 
-const router = express.Router();
+const todoRouter = express.Router();
 
-router.post('/', createTodo);
-router.get('/', getTodos);
-router.get('/:id', getTodoById);
-router.patch('/:id', updateTodo);
-router.delete('/:id', deleteTodo);
+todoRouter.post('/', createTodo);
+todoRouter.get('/', getTodos);
+todoRouter.get('/:id', getTodoById);
+todoRouter.patch('/:id', updateTodo);
+todoRouter.delete('/:id', deleteTodo);
 
-export default router;
+export default todoRouter;

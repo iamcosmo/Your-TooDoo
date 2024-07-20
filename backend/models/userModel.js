@@ -14,10 +14,6 @@ const userdataSchema = mongoose.Schema({
     password: {
       type: String,
       required: true,
-    },
-    todo_id:{
-      type:String,
-      required:true,
     }
 });
 
