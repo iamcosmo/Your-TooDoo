@@ -16,5 +16,5 @@ This project is a Todo API built with Express.js and MongoDB, documented using S
 1. Clone the repository:
 
    ```sh
-   git clone [<https://github.com/iamcosmo/Your-TooDoo.gitrepository-url>](https://github.com/iamcosmo/Your-TooDoo.git)
+   git clone [https://github.com/iamcosmo/Your-TooDoo.gitrepository-url](https://github.com/iamcosmo/Your-TooDoo.git)
    cd <repository-directory>
